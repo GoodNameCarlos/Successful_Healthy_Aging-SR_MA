@@ -376,7 +376,11 @@ britton_AOR_H <-
          characteristics = britton_OR_temp2$characteristics) %>% 
   select(characteristics, AOR, lower, upper) %>% 
   mutate_at(c("AOR", "lower", "upper"), as.numeric) %>% 
-  mutate(characteristics = str_to_lower(characteristics))
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_AOR_H, here("Data", "britton_AOR_H_2008.csv"))
 
 # Age and SEP ajusted 
 britton_AOR_SEP_H <- 
@@ -393,11 +397,15 @@ britton_AOR_SEP_H <-
          characteristics = britton_OR_temp2$characteristics[3:22])  %>% 
   select(characteristics, AOR, lower, upper) %>% 
   mutate_at(c("AOR", "lower", "upper"), as.numeric) %>% 
-  mutate(characteristics = str_to_lower(characteristics))
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_AOR_SEP_H, here("Data", "britton_AOR_SEP_H_2008.csv"))
 
 ############  Mujeres
 # Aged ajusted 
-britton_OR_M <- 
+britton_AOR_M <- 
   britton_OR[3:22,] %>% 
   select(X1, X6) %>%  
   bind_rows(britton_OR_temp, .) %>%  
@@ -412,7 +420,12 @@ britton_OR_M <-
          upper = str_remove(upper, "\\)"), 
          characteristics = britton_OR_temp2$characteristics) %>% 
   select(characteristics, AOR, lower, upper) %>% 
-  mutate_at(c("AOR", "lower", "upper"), as.numeric) 
+  mutate_at(c("AOR", "lower", "upper"), as.numeric) %>% 
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_AOR_M, here("Data", "britton_AOR_M_2008.csv"))
 
 # Age and SEP ajusted 
 britton_AOR_SEP_M <- 
@@ -429,7 +442,12 @@ britton_AOR_SEP_M <-
          characteristics = britton_OR_temp2$characteristics[3:22])  %>% 
   select(characteristics, AOR, lower, upper) %>% 
   mutate_at(c("AOR", "lower", "upper"), as.numeric) %>% 
-  mutate(characteristics = str_to_lower(characteristics))
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_AOR_SEP_M, here("Data", "britton_AOR_SEP_M_2008.csv"))
+
 
 ###-------------###
 # cluster 
@@ -440,5 +458,86 @@ britton_OR_cluster <- table_2 %>%
   data.frame(stringsAsFactors = F) %>% 
   as_tibble()
 
-britton_OR_cluster
+############## Hombres 
+britton_OR_cluster_H <- 
+  britton_OR_cluster %>% 
+  select(X1, X2) %>% 
+  mutate(tmp_chunks = str_split(X2, fixed(" "), n = 2)) %>% 
+  mutate(AOR = map_chr(tmp_chunks, 1), 
+         IC = map_chr(tmp_chunks, 2)) %>% 
+  mutate(tmp_chunks2 = str_split(IC, fixed("–") , n = 2)) %>% 
+  mutate(lower = map_chr(tmp_chunks2, 1),
+         upper = map_chr(tmp_chunks2, 2)) %>% 
+  mutate(upper = str_remove(upper, pattern = "\\)\\so\\.\\d{3}"), 
+         lower = str_remove(lower, pattern = "\\(")) %>%
+  select(X1, AOR, lower, upper) %>% 
+  mutate_at(c("AOR", "lower", "upper"), as.numeric) %>%
+  rename(characteristics = X1) %>% 
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
 
+write_csv(britton_OR_cluster_H, here("Data", "britton_OR_cluster_H.csv"))
+
+# Fully adjusted 
+britton_OR_cluster_H_a <- 
+  britton_OR_cluster %>% 
+  select(X1, X3) %>% 
+  mutate(tmp_chunks = str_split(X3, fixed(" "), n = 2)) %>% 
+  mutate(AOR = map_chr(tmp_chunks, 1), 
+         IC = map_chr(tmp_chunks, 2)) %>% 
+  mutate(tmp_chunks2 = str_split(IC, fixed("–") , n = 2)) %>% 
+  mutate(lower = map_chr(tmp_chunks2, 1),
+         upper = map_chr(tmp_chunks2, 2)) %>% 
+  mutate(upper = str_remove(upper, pattern = "\\)\\so\\.\\d{3}|\\)\\s\\.\\d{2,3}"), 
+         lower = str_remove(lower, pattern = "\\(")) %>% 
+  select(X1, AOR, lower, upper) %>% 
+  mutate_at(c("AOR", "lower", "upper"), as.numeric) %>%
+  rename(characteristics = X1) %>% 
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_OR_cluster_H_a, here("Data", "britton_OR_cluster_H_a.csv"))
+
+############## Mujeres
+britton_OR_cluster_M <- 
+  britton_OR_cluster %>% 
+  select(X1, X4) %>% 
+  mutate(tmp_chunks = str_split(X4, fixed(" "), n = 2)) %>% 
+  mutate(AOR = map_chr(tmp_chunks, 1), 
+         IC = map_chr(tmp_chunks, 2)) %>% 
+  mutate(tmp_chunks2 = str_split(IC, fixed("–") , n = 2)) %>% 
+  mutate(lower = map_chr(tmp_chunks2, 1),
+         upper = map_chr(tmp_chunks2, 2)) %>% 
+  mutate(upper = str_remove(upper, pattern = "\\)\\so\\.\\d{3}|\\)\\s\\.\\d{2}"), 
+         lower = str_remove(lower, pattern = "\\(")) %>% 
+  select(X1, AOR, lower, upper) %>% 
+  mutate_at(c("AOR", "lower", "upper"), as.numeric) %>%
+  rename(characteristics = X1) %>% 
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_OR_cluster_M, here("Data", "britton_OR_cluster_M.csv"))
+
+# Fully adjusted 
+britton_OR_cluster_M_a <- 
+  britton_OR_cluster %>% 
+  select(X1, X5) %>% 
+  mutate(tmp_chunks = str_split(X5, fixed(" "), n = 2)) %>% 
+  mutate(AOR = map_chr(tmp_chunks, 1), 
+         IC = map_chr(tmp_chunks, 2)) %>% 
+  mutate(tmp_chunks2 = str_split(IC, fixed("–") , n = 2)) %>% 
+  mutate(lower = map_chr(tmp_chunks2, 1),
+         upper = map_chr(tmp_chunks2, 2)) %>% 
+  mutate(upper = str_remove(upper, pattern = "\\)\\so\\.\\d{3}|\\)\\s\\.\\d{2,3}"), 
+         lower = str_remove(lower, pattern = "\\(")) %>% 
+  select(X1, AOR, lower, upper) %>% 
+  mutate_at(c("AOR", "lower", "upper"), as.numeric) %>%
+  rename(characteristics = X1) %>% 
+  mutate(author_year = "Britton (2008)",
+         or_rr = "OR",
+         characteristics = str_to_lower(characteristics))
+
+write_csv(britton_OR_cluster_M_a, here("Data", "britton_OR_cluster_M_a.csv"))
