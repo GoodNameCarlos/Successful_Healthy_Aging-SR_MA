@@ -348,9 +348,6 @@ good_function_nocog_G <- good_function_nocog %>%
         axis.text.y =element_blank(),
         axis.ticks.y =element_blank())
 
-
-
-
 grid.arrange(disease_free_G, disease_free_noM_G, good_function_G, good_function_nocog_G,nrow = 2, ncol = 2, )
 
 plot_grid(disease_free_G, disease_free_noM_G, good_function_G, good_function_nocog_G,
