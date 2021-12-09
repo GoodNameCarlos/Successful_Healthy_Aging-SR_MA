@@ -67,46 +67,33 @@ pdf_tables(table)
 
 andrews <- pdf_tables(table)
 
-# Se eliminan cualquier otro dato que no sea importante para la extracción 
+# Se elimina cualquier otro dato que no sea importante para la extracción 
 andrews <- andrews[-6,]
 
-# Se extran los valores numéricos
+# Se extraen los valores numéricos
 
-tables_extract_dbl <- function(.data, variables, separator, IC_VAR) {
-  
+tables_extract_dbl <- function(.data, variables, separator, icvar) {
+  require(stringr)
   require(tidyverse)
-  require(purrr)
-  
-  if (any(str_detect(.data$IC_VAR, "^[:punct:]")) == FALSE) {
+    
+  if (is_tibble(.data) == TRUE) {
   .data %>% 
     select({{ variables }}) %>% 
-    mutate(tmp_chunks = str_split({{ IC_VAR }}, fixed({{ separator }}), n = 2)) %>%   
+    mutate(tmp_chunks = str_split({{ icvar }}, fixed({{ separator }}), n = 2)) %>%   
     mutate(lower = map_chr(tmp_chunks, 1), 
            upper = map_chr(tmp_chunks, 2)) %>% 
-    select(-tmp_chunks, -{{ IC_VAR }}) %>% 
+    select(-tmp_chunks, -{{ icvar }}) %>% 
     rename(characteristics = X1, 
            OR = X2) %>% 
     mutate(OR = str_extract(string = OR, pattern = "^\\d{1,2}.\\d{1,2}|.\\d{1,2}")) %>% 
     mutate_at(c("OR", "lower", "upper"), as.numeric) 
   
-    } else if (any(str_detect(.data$IC_VAR, "^[:punct:]")) == TRUE) {
-    .data %>% 
-      select({{ variables }}) %>% 
-      mutate(tmp_chunks = str_split({{ IC_VAR }}, fixed({{ separator }}), n = 2)) %>%   
-      mutate(lower = map_chr(tmp_chunks, 1), 
-             upper = map_chr(tmp_chunks, 2)) %>% 
-      select(-tmp_chunks, -{{ IC_VAR }}) %>% 
-      rename(characteristics = X1, 
-             OR = X2) %>% 
-      mutate(OR = str_extract(string = OR, pattern = "^\\d{1,2}.\\d{1,2}|.\\d{1,2}")) 
-  } else {
+    } else {
     warning("check data")
   }
 }
 
-any(str_detect(x, "^[:punct:]") == T)
-
-tables_extract_dbl(andrews, X1:X3, separator = "–", IC_VAR = X3)
+tables_extract_dbl(andrews, X1:X3, separator = "–", icvar = X3)
           
           # Referencia 
           andrews %>% 
@@ -137,10 +124,10 @@ table <- table[c(-5, -8)]
 
 arroyo_quiroz <- pdf_tables(table)
 
-locuras(.data = arroyo_quiroz, variables = X1:X3, separator = ",", IC_VAR = X3)
+tables_extract_punct(.data = arroyo_quiroz, variables = X1:X3, separator = ",", IC_VAR = X3)
 
-locuras <- function(.data, variables, separator, IC_VAR) {
-  if (any(str_detect(.data$IC_VAR, "^[:punct:]")) == TRUE) {
+tables_extract_punct <- function(.data, variables, separator, IC_VAR) {
+  if (is_tibble(.data) == TRUE) {
     .data %>% 
       select({{ variables }}) %>% 
       mutate(tmp_chunks = str_split({{ IC_VAR }}, fixed({{ separator }}), n = 2)) %>%   
@@ -149,9 +136,14 @@ locuras <- function(.data, variables, separator, IC_VAR) {
       select(-tmp_chunks, -{{ IC_VAR }}) %>% 
       rename(characteristics = X1, 
              OR = X2) %>% 
-      mutate(OR = str_extract(string = OR, pattern = "^\\d{1,2}.\\d{1,2}|.\\d{1,2}"))
+      mutate(OR = str_extract(string = OR, pattern = "^\\d{1,2}.\\d{1,2}|.\\d{1,2}"),
+             lower = str_extract(string = lower, pattern = "\\d{1,2}.\\d{1,2}|.\\d{1,2}"),  
+             upper = str_extract(string = upper, pattern = "\\d{1,2}.\\d{1,2}|.\\d{1,2}")) 
   } else {
     warning("check data")
   }
 }
-args(str_detect)
+
+
+str_view(string = arroyo_quiroz$X3, pattern = "[[:punct:]]\\d{1,2}.\\d{1,2}|.\\d{1,2}")
+            
