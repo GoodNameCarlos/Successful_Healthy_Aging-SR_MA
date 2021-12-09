@@ -1,7 +1,25 @@
-# Extracción de datos de cada artículo ------------------------------------
+
+### ------------------------------------------------------------------------ ###
+# Título: Función para la extracción de datos
+# Proyecto: Factores asociados con el desarrollo de envejecimiento exitoso y 
+#           saludable: Revisión Sistemática y metaanálisis de estudios 
+#           longitudinales. 
+# Autor: Carlos González-Carballo 
+# email: carlos.gz.cb@gmail.com 
+# Script: Función para la extracción de datos de PDF.
+# Data: datos de PDF para metaanálisis. 
+# Copyright: Este Script es producto de Carlos González-Carballo como trabajo de
+#            investigación del Doctorado en ciencias, Epidemiología.
+### ------------------------------------------------------------------------ ###
+#                 STATUS: Deprecated
+### ------------------------------------------------------------------------ ###
+
+# Paquetes ----------------------------------------------------------------
 library(here)
 library(pdftools)
 library(tidyverse)
+
+# Extracción de datos de cada artículo ------------------------------------
 
 # pasos: 
   # • Obtención de la información del pdf. 
@@ -75,7 +93,7 @@ andrews_AOR_health
 
 write_csv(andrews_AOR_health, here("Data", "andrews_AOR_health_2002.csv"))
 
-## Level of Function with Sense of Self Variables ----------------------------------------------
+## Level of Function with Sense of Self Variables ------------------------------
 andrews_AOR_psych <- andrews[12]
 
 # Extracción de datos 
@@ -84,7 +102,7 @@ tab <- tab[[1]]
 table <- tab[8:11]
 
 # Extracción de nombres 
-  # Los mismos que Level of Function with Activity, Physical Performance and health indicators
+# Los mismos que Level of Function with Activity, Physical Performance and health indicators
   warning("Same names as andrews_AOR_health--line 38")
 
 # Data.frame
@@ -111,7 +129,7 @@ andrews_AOR_psych
 
 write_csv(andrews_AOR_psych, here("Data", "andrews_AOR_psych_2002.csv"))
 
-## Level of Function with Cognitive Variables --------------------------------------------------
+## Level of Function with Cognitive Variables ----------------------------------
 andrews_AOR_cog <- andrews[12]
 
 # Extracción de datos 
