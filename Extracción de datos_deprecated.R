@@ -1,5 +1,6 @@
 
-### ------------------------------------------------------------------------ ###
+################################################################################
+
 # Título: Función para la extracción de datos
 # Proyecto: Factores asociados con el desarrollo de envejecimiento exitoso y 
 #           saludable: Revisión Sistemática y metaanálisis de estudios 
@@ -10,9 +11,10 @@
 # Data: datos de PDF para metaanálisis. 
 # Copyright: Este Script es producto de Carlos González-Carballo como trabajo de
 #            investigación del Doctorado en ciencias, Epidemiología.
-### ------------------------------------------------------------------------ ###
-#                 STATUS: Deprecated
-### ------------------------------------------------------------------------ ###
+
+# STATUS: Deprecated
+
+################################################################################
 
 # Paquetes ----------------------------------------------------------------
 library(here)
