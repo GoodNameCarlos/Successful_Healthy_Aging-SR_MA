@@ -18,7 +18,7 @@
 # Paquetes
 library(tidyverse)
 library(here)
-library(pdftools)
+# library(pdftools)
 library(purrr)
 
 
