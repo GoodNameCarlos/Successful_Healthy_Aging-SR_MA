@@ -52,7 +52,7 @@ tables_extract <- function(.data, variables, orvar, icvar, separator, dbl = FALS
     
     .data %>% 
       select({{ variables }}) %>% 
-      mutate(tmp_chunks = str_split({{ icvar }}, fixed({{ separator }}), n = 2)) %>%   
+      mutate(tmp_chunks = str_split({{ icvar }}, pattern = {{ separator }}, n = 2)) %>%   
       mutate(lower = map_chr(tmp_chunks, 1), 
              upper = map_chr(tmp_chunks, 2)) %>% 
       select(-tmp_chunks, -{{ icvar }}) %>% 
@@ -61,13 +61,13 @@ tables_extract <- function(.data, variables, orvar, icvar, separator, dbl = FALS
       mutate(OR = str_extract(string = OR, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d"), 
              lower = str_extract(string = lower, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d"), 
              upper = str_extract(string = upper, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d")) %>% 
-      mutate_at(c("OR", "upper"), as.numeric)
+      mutate_at(c("OR", "lower", "upper"), as.numeric)
     
   } else if (dbl == FALSE & is_tibble(.data) == TRUE) { # NO contiene un signo de puntuación específico
     
     .data %>% 
       select({{ variables }}) %>% 
-      mutate(tmp_chunks = str_split({{ icvar }}, fixed({{ separator }}), n = 2)) %>%   
+      mutate(tmp_chunks = str_split({{ icvar }}, pattern = {{ separator }}, n = 2)) %>%   
       mutate(lower = map_chr(tmp_chunks, 1), 
              upper = map_chr(tmp_chunks, 2)) %>% 
       select(-tmp_chunks, -{{ icvar }}) %>% 
