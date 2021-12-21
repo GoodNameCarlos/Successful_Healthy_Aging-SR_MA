@@ -232,3 +232,87 @@ bell_healthy <- bell_healthy %>%
 bell_healthy <- tables_fin(bell_healthy, author_year = "Bell (2014)", or_rr = "OR")
 
 write_csv(bell_healthy, here("Data", "bell2014_OR.csv"))
+
+###---------------------------------------------------------------------###
+# Britton (2008) ----------------------------------------------------------
+britton <- pdftools::pdf_text(here("Articulos", "Britton (2008).pdf"))
+
+## OR Successful aging -----------------------------------------------------
+britton_success_a <- britton[4]
+britton_success_b <- britton[5]
+
+# 1 
+tab_a <- str_split(britton_success_a, "\n")
+  tab_a <- tab_a[[1]]
+  tab_a <- tab_a[16:58]
+tab_b <- str_split(britton_success_b, "\n")
+  tab_b <- tab_b[[1]]
+  tab_b <- tab_b[14:25]
+  
+# 2 
+britton_success_a <- pdf_tables(tab_a)
+britton_success_a <- subset(britton_success_a, subset = X2 !="" &
+                              X1 != "P-value for trend" & 
+                              X1 != "P-value" & 
+                              X3 != "1.0")
+britton_success_a[1:2, 6] <- britton_success_a[1:2, 5]
+
+britton_success_b <- pdf_tables(tab_b)
+britton_success_b <- subset(britton_success_b, subset = X2 !="" &
+                              X1 != "P-value for trend" & 
+                              X1 != "P-value" & 
+                              X3 != "1.0")
+
+britton_success <- bind_rows(britton_success_a, britton_success_b)
+
+britton_success <- britton_success %>% select(X1, X3, X6) %>%
+  mutate(tmp_chunks = str_split(X3, pattern = " ", n = 2)) %>%   
+  mutate(OR_M = map_chr(tmp_chunks, 1), 
+         IC_M = map_chr(tmp_chunks, 2)) %>% 
+  mutate(tmp_chunks = str_split(X6, pattern = " ", n = 2)) %>%   
+  mutate(OR_F = map_chr(tmp_chunks, 1), 
+         IC_F = map_chr(tmp_chunks, 2)) %>% 
+  select(-X3, - X6, -tmp_chunks) 
+  
+# Category add using str_c() and not recode() because possible errors.
+# Many variables with same name.
+britton_success$X1[1:2] <- str_c(britton_success$X1[1:2], "Employment grade", sep = " ")
+britton_success$X1[3] <- str_c("Father social class", britton_success$X1[3], sep = " ")
+britton_success$X1[4] <- "Age left education >18"
+britton_success$X1[5] <- "Age left education 17-18"
+britton_success$X1[6:7] <- str_c("Height tertile", britton_success$X1[6:7], sep = " ")
+britton_success$X1[8] <- "Never Smoker"
+britton_success$X1[10:11] <- str_c(britton_success$X1[10:11], "Alcohol, units/wk", sep = " ")
+britton_success$X1[12] <- "No Poor diet"
+britton_success$X1[13:14] <- str_c(britton_success$X1[13:14], "Physical activity", sep = " ")
+britton_success$X1[15:16] <- str_c(britton_success$X1[15:16], "Decision latitude", sep = " ")
+britton_success$X1[17:18] <- str_c(britton_success$X1[17:18], "Job demands", sep = " ")
+britton_success$X1[19:20] <- str_c(britton_success$X1[19:20], "Work support", sep = " ") 
+britton_success$X1[21:22] <- str_c(britton_success$X1[21:22], "Network Index", sep = " ")
+
+### Hombres ----  
+# 3 
+britton_success_m <- tables_extract(britton_success, variables = c(X1, OR_M, IC_M), 
+               orvar = OR_M, 
+               icvar = IC_M, 
+               separator = "–", 
+               dbl = TRUE)
+britton_success_m %>%  print(n = Inf)
+
+# 4 already done
+# 5 
+britton_success_m <- tables_fin(britton_success_m, author_year = "Britton (2008)", or_rr = "OR")
+
+write_csv(britton_success_m, here("Data", "britton2008_success_m.csv"))
+
+### Mujeres ----
+# 3
+britton_success_f <- tables_extract(britton_success, variables = c(X1, OR_F, IC_F), 
+                                    orvar = OR_F, 
+                                    icvar = IC_F, 
+                                    separator = "–", 
+                                    dbl = TRUE)
+britton_success_f %>%  print(n = Inf)
+
+# 
+
