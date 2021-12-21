@@ -189,7 +189,7 @@ write_csv(arroyo_quiroz_OR90, here("Data", "arroyo2020_quiroz_OR90.csv"))
 # Bell (2014) -------------------------------------------------------------
 bell <- pdftools::pdf_text(pdf = here("Articulos", "Bell (2014).pdf"))
 
-# OR Healthy survival  ----------------------------------------------------
+## OR Healthy survival  ----------------------------------------------------
 bell_healthy <- bell[5]
 # 1
 tab <- str_split(bell_healthy, "\n")
@@ -212,36 +212,23 @@ bell_healthy %>% print(n = Inf)
 bell_healthy <- tables_extract(.data = bell_healthy, variables = c(X1, X5, X6), orvar = X5, icvar = X6, separator = "–", dbl = TRUE)
 
 # 4
-bell_healthy %>% 
-  mutate(characteristics = rename(characteristics, 
-                                  <19.0 = , 
-                                  =25.0 = , 
-                                  Waist–hip ratio >0.99 = , 
-                                  Forced expiratory volume in 1 second <2.1 L = , 
-                                  Walk speed =0.75 m/sa = , 
-                                  Grip strength <33 kg = , 
-                                  <120 = , 
-                                  >160 = , 
-                                  Seated diastolic blood pressure >90 mmHg = , 
-                                  Hypertension = , 
-                                  Cognitive Abilities Screening Instrument = , 
-                                  Triglycerides =150 mg/dL = , 
-                                  High-density lipoprotein cholesterol <40 mg/dL = , 
-                                  Glucose =126 mg/dL = , 
-                                  Insulin =20 lU/mL = , 
-                                  Fibrinogen >351 mg/dL = , 
-                                  White blood cell count >6,000 cells/lL = , 
-                                  Never = ,  
-                                  >15 = , 
-                                  Physical Activity Index =30.4 = , 
-                                  Blocks walked per day <12 = , 
-                                  Education <12 years = ,  
-                                  Unmarried in late life = , 
-                                  Ankle–brachial index <0.9 = , 
-                                  Center for Epidemiologic Studies Depression = , 
-                                  Fair or poor self-rated health = , 
-                                  <13 = , 
-                                  >15 = , 
-                                  Past = , 
-                                  Current = , ))
-  
+bell_healthy$characteristics[2] <- "BMI ≥25.0"
+bell_healthy$characteristics[28] <- "Hemoglobin, g/dL >15"
+bell_healthy$characteristics[19] <- ">15 onces/month (Alcohol)"
+
+bell_healthy <- bell_healthy %>% 
+  mutate(characteristics = recode(characteristics, 
+                                  "<19.0" = "BMI <19.0", 
+                                  "<120" = "Systolic blood pressure <120",
+                                  ">160" = "Systolic blood pressure >160",  
+                                  "Cognitive Abilities Screening Instrument" = "Cognitive Abilities Screening Instrument (74-81.9)", 
+                                  "Center for Epidemiologic Studies Depression" = "Center for Epidemiologic Studies Depression 11-items (>9)", 
+                                  "<13" = "Hemoglobin, g/dL <13", 
+                                  "Past" = "Past smoker", 
+                                  "Current" = "Current smoker", 
+                                  "Never" = "Never (Alcohol)"))
+
+# 5
+bell_healthy <- tables_fin(bell_healthy, author_year = "Bell (2014)", or_rr = "OR")
+
+write_csv(bell_healthy, here("Data", "bell2014_OR.csv"))
