@@ -314,5 +314,52 @@ britton_success_f <- tables_extract(britton_success, variables = c(X1, OR_F, IC_
                                     dbl = TRUE)
 britton_success_f %>%  print(n = Inf)
 
-# 
+# 4 already done
+# 5
+britton_success_f <- tables_fin(britton_success_f, author_year = "Britton (2008)", or_rr = "OR")
 
+write_csv(britton_success_f, here("Data", "britton2008_success_f.csv"))
+
+
+## Otros datos -------------------------------------------------------------
+
+per_hm <- 4140/5823*100
+per_ee <- (548+246)/5823*100
+per_t_disease <- (2549+988)/5823*100
+per_t_function <- (757+361)/5823*100
+
+# Ford (2000) -------------------------------------------------------------
+ford <- pdftools::pdf_text(here("Articulos", "Ford (2000).pdf"))
+
+## OR of sustained independence -------------------------------------------
+ford_or <- ford[11]
+
+# 1 
+tab <- str_split(ford_or, "\n")
+  tab <- tab[[1]]
+  tab <- tab[12:31]
+  tab <- tab[c(-7, -12, -16)]
+
+# 2 
+ford_or <- pdf_tables(tab)
+
+# 3 
+ford_or <- tables_extract(ford_or, variables = X1:X3, 
+                          orvar = X2, icvar = X3, 
+                          separator = "-")
+
+# 4 Nombres no requieren de modificación
+# 5 
+ford_or <- tables_fin(ford_or, author_year = "Ford (2000)", or_rr = "OR")
+
+write_csv(ford_or, here("Data", "ford2000_or.csv"))
+
+## Otros datos ----
+98/487*100 # % de personas exitosas 
+n_mee <- round((49 * 98) / 100) # N de hombres exitosos 
+n_mnee <- round((24.9 * 389) / 100) # N de hombres no exitosos 
+n_fee <- 98 - n_mee # N de mujeres exitosas 
+n_fnee <- 389 - n_mnee # N de mujeres no exitosas 
+
+round(n_mee / (n_mnee + n_mee) * 100, digits = 2) # % de hombres exitosos
+round(n_fee / (n_fnee + n_fee) * 100, digits = 2) # % de mujeres exitosas
