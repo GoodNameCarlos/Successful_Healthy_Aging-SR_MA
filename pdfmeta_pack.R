@@ -58,9 +58,9 @@ tables_extract <- function(.data, variables, orvar, icvar, separator, dbl = FALS
       select(-tmp_chunks, -{{ icvar }}) %>% 
       rename(characteristics = X1, 
              OR = {{orvar}}) %>% 
-      mutate(OR = str_extract(string = OR, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d"), 
-             lower = str_extract(string = lower, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d"), 
-             upper = str_extract(string = upper, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d")) %>% 
+      mutate(OR = str_extract(string = OR, pattern = "\\d{1,3}\\.\\d{1,2}|\\.\\d{1,2}|\\d{1,3}"), 
+             lower = str_extract(string = lower, pattern = "\\d{1,3}\\.\\d{1,2}|\\.\\d{1,2}|\\d{1,3}"), 
+             upper = str_extract(string = upper, pattern = "\\d{1,3}\\.\\d{1,2}|\\.\\d{1,2}|\\d{1,3}")) %>% 
       mutate_at(c("OR", "lower", "upper"), as.numeric)
     
   } else if (dbl == FALSE & is_tibble(.data) == TRUE) { # NO contiene un signo de puntuación específico
@@ -73,7 +73,7 @@ tables_extract <- function(.data, variables, orvar, icvar, separator, dbl = FALS
       select(-tmp_chunks, -{{ icvar }}) %>% 
       rename(characteristics = X1, 
              OR = {{ orvar }}) %>% 
-      mutate(OR = str_extract(string = OR, pattern = "\\d{1,2}\\.\\d{1,2}|\\.\\d{1,2}|\\d")) %>% 
+      mutate(OR = str_extract(string = OR, pattern = "\\d{1,3}\\.\\d{1,2}|\\.\\d{1,2}|\\d{1,3}")) %>% 
       mutate_at(c("OR", "lower", "upper"), as.numeric) 
     
   } else {
