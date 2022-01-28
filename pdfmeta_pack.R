@@ -16,11 +16,9 @@
 ################################################################################
 
 # Paquetes
-library(tidyverse)
-library(here)
-# library(pdftools)
-library(purrr)
-
+meta_packages <- c("tidyverse", "here", "purrr") # library(pdftools), se usa directamente en el script 
+lapply(meta_packages, require, character.only = T)
+rm(meta_packages)
 
 # funciones creadas para la extracción de datos ---------------------------
 
