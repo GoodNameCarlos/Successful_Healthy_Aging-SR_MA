@@ -16,11 +16,6 @@
 
 ################################################################################
 
-# Stages
-# 1: Extracción de la información. 
-# 2:   
-
-
 ### ------------------------------------------------------------------- ###
 ###                           Artículos                                 ###
 ### ------------------------------------------------------------------- ###
@@ -133,7 +128,7 @@ arroyo_quiroz_HR <- arroyo_quiroz_HR %>%
 # 5
 arroyo_quiroz_HR <- tables_fin(arroyo_quiroz_HR, author_year = "Arroyo-Quiroz (2020)", or_rr = "HR")
 
-write_csv(arroyo_quiroz_HR, here("Data", "arroyo_quiroz2020_HR.csv"))
+write_excel_csv(arroyo_quiroz_HR, here("Data", "arroyo_quiroz2020_HR.csv"))
 
 
 ## OR of HA at age 77 ------------------------------------------------------
@@ -143,22 +138,25 @@ tab <- str_split(arroyo_quiroz_OR77, pattern = "\n")
   tab <- tab[[1]]
   tab <- tab[c(16:24, 30:36)]
   tab <- tab[-7]
-  
+
+  #### Moved o the begining to control for failure   
+  ## ajustado
+  arroyo_quiroz_OR77 <- pdf_tables(tab)
+  arroyo_quiroz_OR77_adj <- tables_extract(arroyo_quiroz_OR77, 
+                                       variables = c(X1, X5, X7), orvar = X5, icvar = X7,
+                                       separator = ",\\s|,", dbl = T)
 # 2
 arroyo_quiroz_OR77 <- pdf_tables(tab)
 # 3 
 arroyo_quiroz_OR77 <- tables_extract(arroyo_quiroz_OR77, 
                                      variables = c(X1, X2, X4), orvar = X2, icvar = X4,
                                      separator = ",", dbl = T)
-  ## ajustado
-  arroyo_quiroz_OR77_adj <- tables_extract(arroyo_quiroz_OR77, 
-                                       variables = c(X1, X5, X7), orvar = X5, icvar = X7,
-                                       separator = ",\\s|,", dbl = T)
 # 4 (No rename)
 # 5
-arroyo_quiroz_OR77 <- tables_fin(arroyo_quiroz_OR77, author_year = "Arroyo-Quiroz (2020)", or_rr = "OR")
+arroyo_quiroz_OR77
+tables_fin(arroyo_quiroz_OR77, author_year = "Arroyo-Quiroz (2020)", or_rr = "OR")
 
-write_csv(arroyo_quiroz_OR77, here("Data", "arroyo2020_quiroz_OR77.csv"))
+write_excel_csv(arroyo_quiroz_OR77, here("Data", "arroyo2020_quiroz_OR77.csv"))
 
 ## OR of HA at age 90 ------------------------------------------------------
 arroyo_quiroz_OR90 <- arroyo_quiroz[17]
@@ -182,7 +180,7 @@ arroyo_quiroz_OR90 <- tables_extract(arroyo_quiroz_OR90,
 # 5
 arroyo_quiroz_OR90 <- tables_fin(arroyo_quiroz_OR90, author_year = "Arroyo-Quiroz (2020)", or_rr = "OR")
 
-write_csv(arroyo_quiroz_OR90, here("Data", "arroyo2020_quiroz_OR90.csv"))
+write_excel_csv(arroyo_quiroz_OR90, here("Data", "arroyo2020_quiroz_OR90.csv"))
 
 
 ###---------------------------------------------------------------------###
@@ -231,7 +229,7 @@ bell_healthy <- bell_healthy %>%
 # 5
 bell_healthy <- tables_fin(bell_healthy, author_year = "Bell (2014)", or_rr = "OR")
 
-write_csv(bell_healthy, here("Data", "bell2014_OR.csv"))
+write_excel_csv(bell_healthy, here("Data", "bell2014_OR.csv"))
 
 ###---------------------------------------------------------------------###
 # Britton (2008) ----------------------------------------------------------
@@ -303,7 +301,7 @@ britton_success_m %>%  print(n = Inf)
 # 5 
 britton_success_m <- tables_fin(britton_success_m, author_year = "Britton (2008)", or_rr = "OR")
 
-write_csv(britton_success_m, here("Data", "britton2008_success_m.csv"))
+write_excel_csv(britton_success_m, here("Data", "britton2008_success_m.csv"))
 
 ### Mujeres ----
 # 3
@@ -318,7 +316,7 @@ britton_success_f %>%  print(n = Inf)
 # 5
 britton_success_f <- tables_fin(britton_success_f, author_year = "Britton (2008)", or_rr = "OR")
 
-write_csv(britton_success_f, here("Data", "britton2008_success_f.csv"))
+write_excel_csv(britton_success_f, here("Data", "britton2008_success_f.csv"))
 
 
 ## Otros datos -------------------------------------------------------------
@@ -328,6 +326,8 @@ per_ee <- (548+246)/5823*100
 per_t_disease <- (2549+988)/5823*100
 per_t_function <- (757+361)/5823*100
 
+
+###---------------------------------------------------------------------###
 # Ford (2000) -------------------------------------------------------------
 ford <- pdftools::pdf_text(here("Articulos", "Ford (2000).pdf"))
 
@@ -352,7 +352,7 @@ ford_or <- tables_extract(ford_or, variables = X1:X3,
 # 5 
 ford_or <- tables_fin(ford_or, author_year = "Ford (2000)", or_rr = "OR")
 
-write_csv(ford_or, here("Data", "ford2000_or.csv"))
+write_excel_csv(ford_or, here("Data", "ford2000_or.csv"))
 
 ## Otros datos ----
 98/487*100 # % de personas exitosas 
@@ -363,3 +363,116 @@ n_fnee <- 389 - n_mnee # N de mujeres no exitosas
 
 round(n_mee / (n_mnee + n_mee) * 100, digits = 2) # % de hombres exitosos
 round(n_fee / (n_fnee + n_fee) * 100, digits = 2) # % de mujeres exitosas
+
+male <- (n_mee + n_mnee) / (98 + 389) * 100 # % de hombres en el estúdio 
+male - 100
+
+
+###---------------------------------------------------------------------###
+# Gureje (2014) -----------------------------------------------------------
+gureje <- pdftools::pdf_text(here("Articulos", "Gureje (2014).pdf"))
+
+## OR of successful aging --------------------------------------------------
+gureje_or <- gureje[6]
+
+# 1 
+tab <- str_split(gureje_or, "\n")
+  tab <- tab[[1]]
+  tab <- tab[11:35]
+  tab <- tab[c(-5, -9, -12, -18, -22)]
+  
+# 2
+gureje_or_1 <- pdf_tables(tab[1:4])
+  # ARREGLO
+  gureje_or_1 <- gureje_or_1 %>%
+    mutate(X4 = str_c(X4, X5, sep = " "), .keep = "unused") %>%
+    select(-X6)
+
+gureje_or_2 <- pdf_tables(tab[c(5:9, 15:20)])
+  # ARREGLO
+  gureje_or_2 <- gureje_or_2 %>% select(-X5)
+
+gureje_or_3 <- pdf_tables(tab[10:14])
+  # ARREGLO
+  gureje_or_3 <- gureje_or_3 %>%
+    mutate(X2 = str_c(X2, X3, sep = " "),
+           X3 = str_c(X4, X5, sep = " "),
+           X4 = str_c(X6, X7, sep = " "), 
+           .keep = "unused") %>% 
+    select(-X8)
+
+gureje_or <- bind_rows(gureje_or_1, gureje_or_3, gureje_or_2) # Quitamos para evitar clutering 
+
+  rm(gureje_or_1, gureje_or_2, gureje_or_3)
+
+# Change name for each variable in the model
+gureje_or[1:3,] <- gureje_or[1:3,] %>% mutate(X1 = str_c("Age,", X1, "yrs", sep = " "))
+gureje_or[5:7,] <- gureje_or[5:7,] %>% mutate(X1 = str_c("Economic status,", X1, "(ref. Highest)", sep = " "))
+gureje_or[10:12,] <- gureje_or[10:12,] %>% mutate(X1 = str_c("Education yrs,", X1, "(ref. >=13)", sep = " "))
+gureje_or[13:14,] <- gureje_or[13:14,] %>% mutate(X1 = str_c("Residence,", X1, "(ref. Urban)", sep = " "))
+gureje_or[15:16,] <- gureje_or[15:16,] %>% mutate(X1 = str_c("Physical activity,", X1, "(ref. Low)", sep = " "))
+gureje_or <- gureje_or %>% mutate(X1 = recode(X1, "Self-reported health good or excellent (reference fair or poor)" = "Self-reported health, Good or excellent (ref. Fair or poor)"))
+
+  gureje_or
+  
+  # Example with dyplr:
+    # gureje_or[1:3,] <- gureje_or %>%
+    # filter(between(row_number(), 1, 3)) %>% 
+    # mutate(X1 = str_c("Age,", X1, "years", sep = " "))
+  # This method is longer than the one used. 
+
+## OR_hombres --------------------------------------------------------------
+gureje_or_h <- gureje_or %>% 
+    select(X1, X2) %>%
+    separate(X2, into = c("X2", "X3"), sep = "\\s") %>% 
+    filter(!is.na(X3))
+    
+gureje_or_h <- tables_extract(gureje_or_h, 
+                              variables = X1:X3, 
+                              orvar = X2, 
+                              icvar = X3, 
+                              separator = "–", dbl = T)
+print.data.frame(gureje_or_h)
+
+# 5
+gureje_or_h <- tables_fin(gureje_or_h, author_year = "Gureje (2014)", or_rr = "OR")
+
+write_excel_csv(gureje_or_h, here("Data", "gureje2014_OR_m.csv")) # Data is saved with decimals
+
+## OR_Mujeres --------------------------------------------------------------
+gureje_or_m <- gureje_or %>%
+  select(X1, X3) %>% 
+  separate(X3, into = c("X2", "X3"), sep = " ") %>% 
+  filter(X2 != "—") 
+
+gureje_or_m <- tables_extract(gureje_or_m, 
+                              variables = X1:X3, 
+                              orvar = X2, 
+                              icvar = X3, 
+                              separator = "–", dbl = T)
+print.data.frame(gureje_or_m)
+
+# 5
+gureje_or_m <- tables_fin(gureje_or_m, author_year = "Gureje (2014)", or_rr = "OR")
+
+write_excel_csv(gureje_or_m, here("Data", "gureje2014_OR_f.csv")) # Data is saved with decimals
+
+## OR_Total ----------------------------------------------------------------
+gureje_or_t <- gureje_or %>% 
+  select(X1, X4) %>% 
+  separate(X4, into = c("X2", "X3"), sep = " ") 
+
+gureje_or_t <- tables_extract(gureje_or_t, 
+                              variables = X1:X3, 
+                              orvar = X2, 
+                              icvar = X3, 
+                              separator = "–", dbl = T)
+
+print.data.frame(gureje_or_t)
+
+# 5
+gureje_or_t <- tables_fin(gureje_or_t, author_year = "Gureje (2014)", or_rr = "OR")
+
+write_excel_csv(gureje_or_t, here("Data", "gureje2014_OR_t.csv"))
+
+
