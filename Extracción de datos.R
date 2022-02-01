@@ -1,5 +1,4 @@
-
-################################################################################
+#------------------------------------------------------------------------------#
 
 # Título: Extracción de datos para meta análisis
 # Proyecto: Factores asociados con el desarrollo de envejecimiento exitoso y 
@@ -14,7 +13,7 @@
 
 # STATUS: Stable
 
-################################################################################
+#------------------------------------------------------------------------------#
 
 ### ------------------------------------------------------------------- ###
 ###                           Artículos                                 ###
@@ -474,5 +473,252 @@ print.data.frame(gureje_or_t)
 gureje_or_t <- tables_fin(gureje_or_t, author_year = "Gureje (2014)", or_rr = "OR")
 
 write_excel_csv(gureje_or_t, here("Data", "gureje2014_OR_t.csv"))
+
+
+###---------------------------------------------------------------------###
+# James (2019) ------------------------------------------------------------
+James <- pdftools::pdf_text(here("Articulos", "James (2019).pdf"))
+James_or <- James[5]
+
+## HA & Optimism Total by model -------------------------------------------
+# 1 
+tab <- str_split(James_or, "\n")
+  tab <- tab[[1]]
+  tab <- tab[9:12]
+  tab <- tab[-2]
+
+# 2 
+James_or_t <- pdf_tables(tab)  
+James_or_t <- James_or_t %>%
+  select(-X3, -X7) %>% 
+  gather(variable, value, -X1) %>% 
+  spread(X1, value)
+
+# 3 Age-adjusted
+James_or_t_age <- James_or_t %>% 
+  select(variable, `Age-adjusted`) %>% 
+  separate(col = `Age-adjusted`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+James_or_t_age <- tables_extract(James_or_t_age, 
+                                 variables = X1:X3, 
+                                 orvar = X2, 
+                                 icvar = X3, 
+                                 separator = ",", dbl = T)  
+  
+# 4 rename 
+James_or_t_age <- James_or_t_age %>% 
+  mutate(characteristics = recode(characteristics, 
+                                  "X2" = "optimism, Cont", 
+                                  "X4" = "optimism, Q2 (ref. Q1)", 
+                                  "X5" = "optimism, Q3 (ref. Q1)", 
+                                  "X6" = "optimism, Q4 (ref. Q1)"))
+
+# 5 save
+James_or_t_age <- tables_fin(.data = James_or_t_age, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_t_age, here("Data", "James2019_RR_age_adj.csv"))
+
+###---------------------------------------------------------------------###
+# 3 Model 2
+James_or_t_model_2 <- James_or_t %>% 
+  select(variable, `Model 2b`) %>% 
+  separate(col = `Model 2b`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+James_or_t_model_2 <- tables_extract(James_or_t_model_2, 
+                                     variables = X1:X3, 
+                                     orvar = X2, 
+                                     icvar = X3, 
+                                     separator = ",", dbl = T)  
+
+# 4 rename: With the names of the other data frame. 
+James_or_t_model_2[,1] <- James_or_t_age[,1]
+
+# 5 save
+James_or_t_model_2 <- tables_fin(.data = James_or_t_model_2, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_t_model_2, here("Data", "James2019_RR_model2.csv"))
+
+###---------------------------------------------------------------------###
+# 3 Model 3
+James_or_t_model_3 <- James_or_t %>% 
+  select(variable, `Model 3c`) %>% 
+  separate(col = `Model 3c`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+James_or_t_model_3 <- tables_extract(James_or_t_model_3, 
+                                     variables = X1:X3, 
+                                     orvar = X2, 
+                                     icvar = X3, 
+                                     separator = ",", dbl = T)  
+
+# 4 rename: With the names of the other data frame. 
+James_or_t_model_3[,1] <- James_or_t_age[,1]
+
+# 5 save
+James_or_t_model_3 <- tables_fin(.data = James_or_t_model_3, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_t_model_3, here("Data", "James2019_RR_model3.csv"))
+
+
+## HA & Optimism Black & White women by model -----------------------------
+# 1
+tab <- str_split(James_or, "\n")
+  tab <- tab[[1]]
+  tab <- tab[44:54]
+  tab <- tab[c(-2, -5:-7, -9)]
+
+###---------------------------------------------------------------------###
+# 2 Black Women
+James_or_b <- pdf_tables(tab[1:3])
+James_or_b <- James_or_b %>%
+  select(-X3, -X7) %>% 
+  gather(variable, value, -X1) %>% 
+  spread(X1, value)
+
+# Age adjusted -------------#
+# 3 
+James_or_b_age <- James_or_b %>% 
+  select(variable, `Age-adjusted`) %>% 
+  separate(col = `Age-adjusted`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_b_age <- tables_extract(James_or_b_age, 
+                                 variables = X1:X3, 
+                                 orvar = X2, 
+                                 icvar = X3, 
+                                 separator = ",", dbl = T) 
+# 4 rename
+James_or_b_age <- James_or_b_age %>% 
+  mutate(characteristics = recode(characteristics, 
+                                  "X2" = "optimism, Cont", 
+                                  "X4" = "optimism, Q2 (ref. Q1)", 
+                                  "X5" = "optimism, Q3 (ref. Q1)", 
+                                  "X6" = "optimism, Q4 (ref. Q1)"))
+
+# 5 save
+James_or_b_age <- tables_fin(.data = James_or_b_age, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_b_age, here("Data", "James2019_RR_black_age_adj.csv"))
+
+# Model 2 ------------------#
+# 3 
+James_or_b_model2 <- James_or_b %>% 
+  select(variable, `Model 2b`) %>% 
+  separate(col = `Model 2b`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_b_model2<- tables_extract(James_or_b_model2, 
+                                 variables = X1:X3, 
+                                 orvar = X2, 
+                                 icvar = X3, 
+                                 separator = ",", dbl = T) 
+# 4 rename
+James_or_b_model2[,1]<- James_or_b_age[,1]
+
+# 5 save
+James_or_b_model2 <- tables_fin(.data = James_or_b_model2, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_b_model2, here("Data", "James2019_RR_black_model2.csv"))
+
+# Model 3 ------------------#
+# 3 
+James_or_b_model3 <- James_or_b %>% 
+  select(variable, `Model 3c`) %>% 
+  separate(col = `Model 3c`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_b_model3<- tables_extract(James_or_b_model3, 
+                                   variables = X1:X3, 
+                                   orvar = X2, 
+                                   icvar = X3, 
+                                   separator = ",", dbl = T) 
+# 4 rename
+James_or_b_model3[,1]<- James_or_b_age[,1]
+
+# 5 save
+James_or_b_model3 <- tables_fin(.data = James_or_b_model3, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_b_model3, here("Data", "James2019_RR_black_model3.csv"))
+
+###---------------------------------------------------------------------###
+# 2 White Women
+James_or_w <- pdf_tables(tab[4:6])
+James_or_w <- James_or_w %>%
+  select(-X3, -X7) %>% 
+  gather(variable, value, -X1) %>% 
+  spread(X1, value)
+
+# 3 
+# Age adjusted -------------#
+# 3 
+James_or_w_age <- James_or_w %>% 
+  select(variable, `Age-adjusted`) %>% 
+  separate(col = `Age-adjusted`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_w_age <- tables_extract(James_or_w_age, 
+                                 variables = X1:X3, 
+                                 orvar = X2, 
+                                 icvar = X3, 
+                                 separator = ",", dbl = T) 
+# 4 rename
+James_or_w_age <- James_or_w_age %>% 
+  mutate(characteristics = recode(characteristics, 
+                                  "X2" = "optimism, Cont", 
+                                  "X4" = "optimism, Q2 (ref. Q1)", 
+                                  "X5" = "optimism, Q3 (ref. Q1)", 
+                                  "X6" = "optimism, Q4 (ref. Q1)"))
+
+# 5 save
+James_or_w_age <- tables_fin(.data = James_or_w_age, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_w_age, here("Data", "James2019_RR_white_age_adj.csv"))
+
+# Model 2 ------------------#
+# 3 
+James_or_w_model2 <- James_or_w %>% 
+  select(variable, `Model 2b`) %>% 
+  separate(col = `Model 2b`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_w_model2<- tables_extract(James_or_w_model2, 
+                                   variables = X1:X3, 
+                                   orvar = X2, 
+                                   icvar = X3, 
+                                   separator = ",", dbl = T) 
+# 4 rename
+James_or_w_model2[,1]<- James_or_w_age[,1]
+
+# 5 save
+James_or_w_model2 <- tables_fin(.data = James_or_w_model2, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_w_model2, here("Data", "James2019_RR_white_model2.csv"))
+
+# Model 3 ------------------#
+# 3 
+James_or_w_model3 <- James_or_w %>% 
+  select(variable, `Model 3c`) %>% 
+  separate(col = `Model 3c`, into = c("X2", "X3"), sep = "\\s\\(") %>% 
+  rename(X1 = variable) 
+
+James_or_w_model3<- tables_extract(James_or_w_model3, 
+                                   variables = X1:X3, 
+                                   orvar = X2, 
+                                   icvar = X3, 
+                                   separator = ",", dbl = T) 
+# 4 rename
+James_or_w_model3[,1]<- James_or_w_age[,1]
+
+# 5 save
+James_or_w_model3 <- tables_fin(.data = James_or_w_model3, author_year = "James (2019)", or_rr = "RR")
+
+write_excel_csv(James_or_w_model3, here("Data", "James2019_RR_white_model3.csv"))
+
+
+
+
+
+
+
+
 
 
