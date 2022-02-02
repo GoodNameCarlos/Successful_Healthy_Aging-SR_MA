@@ -716,9 +716,85 @@ write_excel_csv(James_or_w_model3, here("Data", "James2019_RR_white_model3.csv")
 
 
 
+# Kaplan (2008) -----------------------------------------------------------
+kaplan <- pdftools::pdf_text(here("Articulos", "Kaplan (2008).pdf"))
+
+## OR Thrivers -----------------------------------------------------------
+kaplan <- kaplan[5]
+
+# 1 
+tab <- str_split(kaplan, "\n")
+  tab <- tab[[1]]
+  tab <- tab[10:40]
+  tab <- tab[c(-5:-11, -14, -21,  -26)]
+
+# 2 
+kaplan_or <- pdf_tables(tab)
+kaplan_or[5:6,] <- kaplan_or[5:6,] %>% 
+  separate(col = X4, into = c("X6", "X7"), sep = "\\s") %>% 
+  separate(col = X3, into = c("X4", "X5"), sep = "\\s") %>% 
+  separate(col = X2, into = c("X2", "X3"), sep = "\\s")
+
+print.data.frame(kaplan_or)
+
+# Thrivers vs Nonthrivers ----------#
+# 3 
+kaplan_or_vsNoNt <- tables_extract(kaplan_or,
+                                   variables = X1:X3,
+                                   orvar = X2, icvar = X3, 
+                                   separator = "–", dbl = T) 
+
+# 4 
+kaplan_or_vsNoNt <- kaplan_or_vsNoNt %>%
+  mutate(characteristics = recode(characteristics, 
+                                  "\002 High school" = ">=High school", 
+                                  "$15,000–$29,999" = "Household income, $15k–$29,999 (ref. <$15k)",
+                                  ".$29,999" = "Household income, >$29,999 (ref. <$15k)"))
+
+# 5 
+kaplan_or_vsNoNt <- tables_fin(kaplan_or_vsNoNt, author_year = "Kaplan (2008)", or_rr = "OR")
+
+write_excel_csv(kaplan_or_vsNoNt, here("Data", "kaplan2008_OR_vsNoNt.csv"))
+
+# Thrivers vs Institutionalized ----------# 
+# 3 
+kaplan_or_vsInst <- tables_extract(kaplan_or,
+                                   variables = c(X1, X4:X5),
+                                   orvar = X4, icvar = X5, 
+                                   separator = "–", dbl = T) 
+
+# 4 
+kaplan_or_vsInst[,1] <-  kaplan_or_vsNoNt[,1]
+
+# 5 
+kaplan_or_vsInst <- tables_fin(kaplan_or_vsInst, author_year = "Kaplan (2008)", or_rr = "OR")
+
+write_excel_csv(kaplan_or_vsInst, here("Data", "kaplan2008_OR_vsInst.csv"))
+
+# Thrivers vs Deceased ----------# 
+# 3 
+kaplan_or_vsdead <- tables_extract(kaplan_or,
+                                   variables = c(X1, X6:X7),
+                                   orvar = X6, icvar = X7, 
+                                   separator = "–", dbl = T) 
+
+# 4 
+kaplan_or_vsdead[,1] <-  kaplan_or_vsNoNt[,1]
+
+# 5 
+kaplan_or_vsdead <- tables_fin(kaplan_or_vsdead, author_year = "Kaplan (2008)", or_rr = "OR")
+
+write_excel_csv(kaplan_or_vsdead, here("Data", "kaplan2008_OR_vsDead.csv"))
 
 
+## Otros datos  ------------------------------------------------------------
+total <- 2432
+female_n <- 115 + 690 + 202 + 441 
+male_n <- total - female_n
+female_per <- round((female_n / total) * 100, digits = 2)
 
-
+thrivers <- round((190/total) * 100, digits = 2)
+thrivers_f <- round((115/female_n) * 100, digits = 1) 
+thrivers_m <- round((115/male_n) * 100, digits = 1) 
 
 
