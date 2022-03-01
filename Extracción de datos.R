@@ -716,6 +716,7 @@ write_excel_csv(James_or_w_model3, here("Data", "James2019_RR_white_model3.csv")
 
 
 
+###---------------------------------------------------------------------###
 # Kaplan (2008) -----------------------------------------------------------
 kaplan <- pdftools::pdf_text(here("Articulos", "Kaplan (2008).pdf"))
 
@@ -798,3 +799,208 @@ thrivers_f <- round((115/female_n) * 100, digits = 1)
 thrivers_m <- round((115/male_n) * 100, digits = 1) 
 
 
+
+###---------------------------------------------------------------------###
+# Kim (2019) --------------------------------------------------------------
+kim <- pdftools::pdf_text(here("Articulos", "Kim (2019).pdf"))
+
+## HA & Optimism -----------------------------------------------------------
+kim_hr <- kim[5]
+
+#------------------------------#
+### Total ----
+# 1 
+tab <- str_split(kim_hr, "\n")
+tab <- tab[[1]]
+tab <- tab[13:15]
+
+# 2 
+kim_hr_t <- pdf_tables(tab)
+kim_hr_t_a <- kim_hr_t %>%
+  select(-X4:-X5) %>% 
+  gather(variable, value, -X1)  %>% 
+  filter(!str_detect(pattern = "\\d{1},\\s\\d{1,2}", string = value)) %>% 
+  spread(X1, value)
+
+kim_hr_t_b <- kim_hr_t %>%
+  select(-X4:-X5) %>% 
+  gather(variable, value, -X1)  %>% 
+  filter(str_detect(pattern = "\\d{1},\\s\\d{1,2}", string = value)) %>% 
+  spread(X1, value)  
+
+kim_hr_t <- bind_cols(kim_hr_t_a, kim_hr_t_b[,-1]) 
+kim_hr_t <- kim_hr_t %>% 
+  rename("X1" = variable, "X2" = `1...2`, "X3" = `1...5`,"X4" = `2d...3`,
+         "X5" = `2d...6`, "X6" = `3e...4`, "X7" = `3e...7`) %>% 
+  arrange(factor(X1, levels = c("X2", "X6", "X8", "X10")))
+
+rm(kim_hr_t_a, kim_hr_t_b)
+
+##------------------------------##
+# 3 Age adjusted model
+kim_hr_t_age <- tables_extract(kim_hr_t, variables = c("X1", "X2", "X3"), 
+                          orvar = X2, icvar = X3, 
+                          separator = "\\,\\s", dbl = T)
+
+# 4 Names
+kim_hr_t_age <- kim_hr_t_age %>% 
+  mutate(characteristics = recode(characteristics, 
+                                  "X2" = "optimism, Cont",
+                                  "X6" = "optimism, Q2 (ref. Q1)",
+                                  "X8" = "optimism, Q3 (ref. Q1)",
+                                  "X10" = "optimism, Q4 (ref. Q1)"))
+
+# 5 
+kim_hr_t_age <- tables_fin(kim_hr_t_age, author_year = "Kim (2019)", or_rr = "HR")
+
+write_excel_csv(kim_hr_t_age, here("Data", "kim20198_hr_t_age.csv"))
+
+##------------------------------##
+# 3 Model 2 (age, sex, race, marital status, education, total wealth, and depression)
+kim_hr_t_model2 <- tables_extract(kim_hr_t, variables = c("X1", "X4", "X5"), 
+                               orvar = X4, icvar = X5, 
+                               separator = "\\,\\s", dbl = T)
+
+# 4 Names
+kim_hr_t_model2[, 1] <- kim_hr_t_age[, 1]
+
+# 5 
+kim_hr_t_model2 <- tables_fin(kim_hr_t_model2, author_year = "Kim (2019)", or_rr = "HR")
+
+write_excel_csv(kim_hr_t_model2, here("Data", "kim20198_hr_t_model2.csv"))
+
+#------------------------------#
+# 3 Model 3 (model 2 plus: smoking status, alcohol intake, physical activity, body mass index)
+kim_hr_t_model3 <- tables_extract(kim_hr_t, variables = c("X1", "X6", "X7"), 
+                                  orvar = X6, icvar = X7, 
+                                  separator = "\\,\\s", dbl = T)
+
+# 4 Names
+kim_hr_t_model3[, 1] <- kim_hr_t_age[, 1]
+
+# 5 
+kim_hr_t_model3 <- tables_fin(kim_hr_t_model3, author_year = "Kim (2019)", or_rr = "HR")
+
+write_excel_csv(kim_hr_t_model3, here("Data", "kim20198_hr_t_model3.csv"))
+
+#------------------------------#
+# Women & Men 
+# 1 
+tab <- str_split(kim_hr, "\n")
+tab <- tab[[1]]
+tab <- tab[67:73]
+tab <- tab[-4]
+
+##------------------------------##
+### Women ---- 
+# 2 
+kim_hr_t_women <- pdf_tables(tab[1:3])
+
+kim_hr_t_women <- kim_hr_t_women %>%
+  gather(variable, value, -X1) %>% 
+  spread(X1, value)
+
+kim_hr_t_women <- kim_hr_t_women %>% 
+  separate(`1d`, into = c("X2", "X3"), sep = "(?<=\\d)\\s") %>% 
+  separate(`2e`, into = c("X4", "X5"), sep = "(?<=\\d)\\s") %>% 
+  separate(`3f`, into = c("X6", "X7"), sep = "(?<=\\d)\\s") %>%
+  rename("X1" = variable)
+
+# 3 Age adjusted model
+kim_hr_t_women_age <- tables_extract(kim_hr_t_women, variables = X1:X3, orvar = X2, icvar = X3, separator = "\\,\\s")
+kim_hr_t_women_age <- kim_hr_t_women_age %>% mutate(characteristics = recode(characteristics,
+                                                         "X2" = "optimism, Cont",
+                                                         "X3" = "optimism, Q2 (ref. Q1)",
+                                                         "X4" = "optimism, Q3 (ref. Q1)",
+                                                         "X5" = "optimism, Q4 (ref. Q1)"))
+  
+# 3 Model 2 (age, sex, race, marital status, education, total wealth, and depression)
+kim_hr_t_women_model2 <- tables_extract(kim_hr_t_women, variables = c(X1, X4, X5), orvar = X4, icvar = X5, separator = "\\,\\s")
+kim_hr_t_women_model2[,1] <- kim_hr_t_women_age[,1]
+
+# 3 Model 3 (model 2 plus: smoking status, alcohol intake, physical activity, body mass index)
+kim_hr_t_women_model3 <- tables_extract(kim_hr_t_women, variables = c(X1, X6, X7), orvar = X6, icvar = X7, separator = "\\,\\s")
+kim_hr_t_women_model3[,1] <- kim_hr_t_women_age[,1]
+
+# 4 Recode of the variables is already done in lines 911, 919, & 923. 
+# 5
+kim_hr_t_women_age <- tables_fin(kim_hr_t_women_age, author_year = "Kim (2019)", or_rr = "HR")
+kim_hr_t_women_model2 <- tables_fin(kim_hr_t_women_model2, author_year = "Kim (2019)", or_rr = "HR")
+kim_hr_t_women_model3 <- tables_fin(kim_hr_t_women_model3, author_year = "Kim (2019)", or_rr = "HR")
+
+write_excel_csv(kim_hr_t_women_age, here("Data", "kim20198_hr_women_age.csv"))
+write_excel_csv(kim_hr_t_women_model2, here("Data", "kim20198_hr_women_model2.csv"))
+write_excel_csv(kim_hr_t_women_model3, here("Data", "kim20198_hr_women_model3.csv"))
+
+##------------------------------##
+### Men ----
+# 2
+kim_hr_t_men <- pdf_tables(tab[4:6])
+
+kim_hr_t_men <- kim_hr_t_men %>%
+  gather(variable, value, -X1) %>% 
+  spread(X1, value)
+
+kim_hr_t_men <- kim_hr_t_men %>% 
+  separate(`1d`, into = c("X2", "X3"), sep = "(?<=\\d)\\s") %>% 
+  separate(`2e`, into = c("X4", "X5"), sep = "(?<=\\d)\\s") %>% 
+  separate(`3f`, into = c("X6", "X7"), sep = "(?<=\\d)\\s") %>%
+  rename("X1" = variable)
+
+# 3 Age adjusted model
+kim_hr_t_men_age <- tables_extract(kim_hr_t_men, variables = X1:X3, orvar = X2, icvar = X3, separator = "\\,\\s")
+kim_hr_t_men_age <- kim_hr_t_men_age %>% mutate(characteristics = recode(characteristics,
+                                                                             "X2" = "optimism, Cont",
+                                                                             "X3" = "optimism, Q2 (ref. Q1)",
+                                                                             "X4" = "optimism, Q3 (ref. Q1)",
+                                                                             "X5" = "optimism, Q4 (ref. Q1)"))
+
+# 3 Model 2 (age, sex, race, marital status, education, total wealth, and depression)
+kim_hr_t_men_model2 <- tables_extract(kim_hr_t_men, variables = c(X1, X4, X5), orvar = X4, icvar = X5, separator = "\\,\\s")
+kim_hr_t_men_model2[,1] <- kim_hr_t_men_age[,1]
+
+# 3 Model 3 (model 2 plus: smoking status, alcohol intake, physical activity, body mass index)
+kim_hr_t_men_model3 <- tables_extract(kim_hr_t_men, variables = c(X1, X6, X7), orvar = X6, icvar = X7, separator = "\\,\\s")
+kim_hr_t_men_model3[,1] <- kim_hr_t_men_age[,1]
+
+# 4 Recode of the variables is already done in lines 911, 919, & 923. 
+# 5
+kim_hr_t_men_age <- tables_fin(kim_hr_t_men_age, author_year = "Kim (2019)", or_rr = "HR")
+kim_hr_t_men_model2 <- tables_fin(kim_hr_t_men_model2, author_year = "Kim (2019)", or_rr = "HR")
+kim_hr_t_men_model3 <- tables_fin(kim_hr_t_men_model3, author_year = "Kim (2019)", or_rr = "HR")
+
+write_excel_csv(kim_hr_t_men_age, here("Data", "kim20198_hr_men_age.csv"))
+write_excel_csv(kim_hr_t_men_model2, here("Data", "kim20198_hr_men_model2.csv"))
+write_excel_csv(kim_hr_t_men_model3, here("Data", "kim20198_hr_men_model3.csv"))
+
+
+## Otros datos -------------------------------------------------------------
+# female and male Pop
+kim_sex <- kim[4]
+kim_sex <- str_split(kim_sex, "\n")
+kim_sex <- kim_sex[[1]]
+
+kim_sex_n <- kim_sex[9]
+kim_sex_n <- pdf_tables(kim_sex_n)
+kim_sex_n <- kim_sex_n %>% 
+  transmute_all(list(n = ~str_extract(., "\\d,\\d{1,3}"))) %>% 
+  transmute_all(list(final= ~str_remove(., ","))) %>%  
+  mutate_all(as.numeric) %>% 
+  rename(X2 = X1_n_final, 
+         X3 = X2_n_final,
+         X4 = X3_n_final,
+         X5 = X4_n_final) %>% 
+  mutate(X1 = as.character(sum(c_across(1:4)))) %>% 
+  relocate(X1, .before = 1)
+
+kim_sex_per <- kim_sex[13:14]
+kim_sex_per <- pdf_tables(kim_sex_per)
+kim_sex_per <- kim_sex_per %>% 
+  mutate(across(c("X2", "X3", "X4", "X5"), as.numeric))
+
+kim_sex <- bind_rows(kim_sex_n, kim_sex_per)
+write_excel_csv(kim_sex, here("Temp", "kim_Sex.csv"))
+
+# kim_sex %>% 
+#   rowwise() %>% 
+#   transmute(total = sum(c_across(2:5))) 
