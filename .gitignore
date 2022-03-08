@@ -23,18 +23,8 @@
 03\ Data/Segunda\ Fase/Extraccion/Temp/
 03\ Data/Segunda\ Fase/Extraccion/Data/
 03\ Data/Segunda\ Fase/Extraccion/Historico/
+03\ Data/Segunda\ Fase/Alternos/
 
-
-
-
-
-
-#########
-# Para excluir todo dentro de un folder
-somefolder/*
-# Con una exepción
-!somefolder/.gitkeep 
-#########
 
 #### >>>>> RStudio .gitignore
 # History files
