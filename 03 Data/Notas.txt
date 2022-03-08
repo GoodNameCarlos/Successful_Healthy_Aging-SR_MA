@@ -1,0 +1,23 @@
+Se quedan las siguientes variables: 
+	- Item Type
+	- Publication Year
+	- Author 
+	- Title 
+	- Publication Title
+	- ISSN
+	- DOI
+	- Abstract Note
+	- Date
+	- Pages
+	- Issue
+	- Volume
+	- Journal Abb
+	- Language
+	- Extra
+	- Manual Tags
+
+*Modificaciones hechas en R con el paquete Textr
+
+# Actualización de datos_V1 no tiene asignada una fecha por el uso que se le va a dar.
+# Su función es actualizar la fecha de los artículos que se agregaron en la jornada
+# para así poder llevar un registro actualizado de la base de datos. 

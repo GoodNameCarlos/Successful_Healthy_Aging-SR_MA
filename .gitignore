@@ -3,11 +3,19 @@
 *.tmp
 
 # Directorio: Selection 
-02\ Selection/*
+02\ Selection/
 !02\ Selection/Hoja de selección_Selec.pdf
 !02\ Selection/Diccionario de datos_Select.xlsx
 
-# Director
+# Directorio: Data
+03\ Data/Historico/
+03\ Data/Actualizacion de datos_V1.R
+03\ Data/Agregar.txt
+03\ Data/Nombres.csv
+
+## SubDirectorio: Primera Fase 
+
+
 
 
 
