@@ -1,6 +1,8 @@
 #### >>>>> Proyecto .gitignore
 # Archivos globales a ignorar
 *.tmp
+*.docx
+*.lnk
 
 # Directorio: Selection 
 02\ Selection/
@@ -16,6 +18,13 @@
 ## SubDirectorio: Primera Fase 
 03\ Data/Primera\ Fase/Guias/
 03\ Data/Primera\ Fase/Arts/
+
+## SubDirectorio: Segunda Fase
+03\ Data/Segunda\ Fase/Temp/
+03\ Data/Segunda\ Fase/Data/
+03\ Data/Segunda\ Fase/Historico/
+
+
 
 
 
