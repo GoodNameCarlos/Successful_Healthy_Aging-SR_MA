@@ -1,17 +1,34 @@
 #### >>>>> Proyecto .gitignore
+# Archivos globales a ignorar
+*.tmp
 
+# Directorio: Selection 
+02\ Selection/*
+!02\ Selection/Hoja de selección_Selec.pdf
+!02\ Selection/Diccionario de datos_Select.xlsx
+
+# Director
+
+
+
+#########
+# Para excluir todo dentro de un folder
+somefolder/*
+# Con una exepción
+!somefolder/.gitkeep 
+#########
 
 #### >>>>> RStudio .gitignore
 # History files
-.Rhistory
-.Rapp.history
+*.Rhistory
+*.Rapp.history
 
 # Session Data files
-.RData
-.RDataTmp
+*.RData
+*.RDataTmp
 
 # User-specific files
-.Ruserdata
+*.Ruserdata
 
 # Example code in package build process
 *-Ex.R
