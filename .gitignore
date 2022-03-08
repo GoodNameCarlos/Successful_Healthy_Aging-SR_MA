@@ -24,6 +24,10 @@
 03\ Data/Segunda\ Fase/Extraccion/Data/
 03\ Data/Segunda\ Fase/Extraccion/Historico/
 03\ Data/Segunda\ Fase/Alternos/
+03\ Data/Segunda\ Fase/Articulos/Referenciados/
+03\ Data/Segunda\ Fase/Articulos/Removed/
+03\ Data/Segunda\ Fase/Data/Anterior/
+
 
 
 #### >>>>> RStudio .gitignore

@@ -1,0 +1,16 @@
+﻿"characteristics","OR","lower","upper"
+"Age",1.17,1.14,1.19
+"Female",0.91,0.77,1.09
+"Schooling",1.02,1,1.04
+"Married",1.02,0.85,1.21
+"Follow-up",0.02,1.25,0
+"Depression",0.85,0.7,1.03
+"Low-risk drinker",1.29,0.9,1.86
+"Heavy drinker",1.13,0.46,2.77
+"Smoker (ever)",0.09,0.67,1.17
+"Exercise",1.14,0.95,1.38
+"Overweight",0.9,0.72,1.13
+"Obesity",0.72,0.57,0.91
+"Underweight",1.4,1.1,1.79
+"Long-lived mother",1.22,0.99,1.5
+"Long-lived father",1.05,0.86,1.29
