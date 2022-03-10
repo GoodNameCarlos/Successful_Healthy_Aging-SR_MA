@@ -1004,3 +1004,26 @@ write_excel_csv(kim_sex, here("Temp", "kim_Sex.csv"))
 # kim_sex %>% 
 #   rowwise() %>% 
 #   transmute(total = sum(c_across(2:5))) 
+
+
+###---------------------------------------------------------------------###
+# Nari (2021) -------------------------------------------------------------
+
+# No se presentan los resultados como los otros estudios.  
+
+# Hombres 
+Nari_h <- matrix(c(574, 1115, 1071, 703), nrow = 2, ncol = 2)
+epitools::oddsratio(Nari_h)
+
+epiDisplay::cci(caseexp = 574, casenonex = 1115, 
+                controlex = 1071, controlnonex =  703,
+                design = "cohort")
+
+# Mujeres
+Nari_m <- matrix(c(955, 1083, 1684, 671), nrow = 2, ncol = 2)
+epitools::oddsratio(Nari_m)
+
+epiDisplay::cci(caseexp = 955, casenonex = 1083, 
+                controlex = 1684, controlnonex =  671,
+                design = "cohort")
+
