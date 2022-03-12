@@ -2,6 +2,7 @@
 # Archivos globales a ignorar
 *.tmp
 *.docx
+*.doc
 *.lnk
 
 # Directorio: Selection 
