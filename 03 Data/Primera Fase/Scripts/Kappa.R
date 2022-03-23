@@ -73,16 +73,21 @@ data_kappa <- data_kappa %>%
 irr::agree(data_kappa[, 20:21])
   questionr::freq(data_kappa$agree) # Agreement per variable
 
-  # Disagreement data base
-  data_disagreement <- data_kappa %>% dplyr::filter(agree == "disagree")
+  # Adrian inter agreement
+  adrian_agree <- data_kappa %>% 
+    select(accion_Adrian) %>% 
+    mutate(accion_Adrian_mutate = ifelse(accion_Adrian == 2, 0, 1), 
+           agree = ifelse(accion_Adrian == accion_Adrian_mutate, T, F)) 
   
+  questionr::freq(adrian_agree$agree)
+    irr::agree(adrian_agree[, 1:2])
+
+## Disagreement data base ----
+  data_disagreement <- data_kappa %>% dplyr::filter(agree == "disagree")
   write_excel_csv(data_disagreement, here("Data", "DF_articulo_disagreement.csv")) # disagreemnt by raters Carlos & Adrian, missing Etna's. 
-
-
-
+  
 # Kappa Statistic ---------------------------------------------------------
 ####
-
 # Supuestos y requisitos: 
 #   1. Dos variables de resultado categ?ricas, pueden ser ordinales o nominales.   
 #   2. Las dos variables deben tener exactamente la misma categoria. 
@@ -95,9 +100,6 @@ psych::cohen.kappa(data_kappa[, 20:21])
 irr::kappa2(data_kappa[, 20:21])
 irr::kendall(data_kappa[, 20:21])
 
-irr::kappam.fleiss(diagnoses[, 2:3])
-irr::agree(diagnoses[, 2:3])
-
 # Kappa de cada elemento
   irr::kappa2(data_kappa[, 2:3])
   irr::kappa2(data_kappa[, 4:5])
@@ -108,9 +110,7 @@ irr::agree(diagnoses[, 2:3])
   irr::kappa2(data_kappa[, 14:15])
 
 
-
-
-# Demo Kappa --------------------------------------------------------------
+# Kappa Example --------------------------------------------------------------
 
 diagnoses <- as.table(rbind(
   c(7, 1, 2, 3, 0), c(0, 8, 1, 1, 0),
