@@ -10,7 +10,7 @@ library(rio)
 
 # Importando la base de datos 
 
-DF_articulos_original <- read_csv(here("03 Data", "Original", "20210830_DT Artículos(NoMod)_06Datos_1247.csv"))
+DF_articulos_original <- read_csv(here("Original", "20210830_DT ArtÃ­culos(NoMod)_06Datos_1247.csv"))
 
 DF_articulos_org <- as_tibble(DF_articulos_original)
 
@@ -27,7 +27,7 @@ DF_articulo <- DF_articulos_org %>%
 
 # Exportar datos originales -----------------------------------------------
 
-write_excel_csv(DF_articulo, here("03 Data", "20210830_DT Artículos limpio_06Datos.csv"))
+write_excel_csv(DF_articulo, here("03 Data", "20210830_DT Art?culos limpio_06Datos.csv"))
 
 # Limpieza ----------------------------------------------------------------
 
@@ -97,5 +97,5 @@ DF_articulo <- relocate(DF_articulo, autor, .after = titulo)
 
 # Exportaci?n -----------------------------------------------------------
 
-write_excel_csv(DF_articulo,  here("03 Data", "DF_articulo.csv"))
+write_excel_csv(DF_articulo,  here("DF_articulo.csv"))
 

@@ -12,9 +12,11 @@
 
 # Directorio: Data
 03\ Data/Historico/
-03\ Data/Actualizacion de datos_V1.R
+03\ Data/Scripts/Actualizacion de datos_V1.R
+03\ Data/Scripts/Data_check.R
 03\ Data/Agregar.txt
 03\ Data/Nombres.csv
+03\ Data/Rev_meta.Rproj
 
 ## SubDirectorio: Primera Fase 
 03\ Data/Primera\ Fase/Guias/

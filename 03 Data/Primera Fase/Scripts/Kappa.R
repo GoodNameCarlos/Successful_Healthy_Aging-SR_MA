@@ -77,7 +77,7 @@ irr::agree(data_kappa[, 20:21])
   adrian_agree <- data_kappa %>% 
     select(accion_Adrian) %>% 
     mutate(accion_Adrian_mutate = ifelse(accion_Adrian == 2, 0, 1), 
-           agree = ifelse(accion_Adrian == accion_Adrian_mutate, T, F)) 
+           agree = ifelse(accion_Adrian == accion_Adrian_mutate, "agree", "disagree")) 
   
   questionr::freq(adrian_agree$agree)
     irr::agree(adrian_agree[, 1:2])
@@ -85,6 +85,10 @@ irr::agree(data_kappa[, 20:21])
 ## Disagreement data base ----
   data_disagreement <- data_kappa %>% dplyr::filter(agree == "disagree")
   write_excel_csv(data_disagreement, here("Data", "DF_articulo_disagreement.csv")) # disagreemnt by raters Carlos & Adrian, missing Etna's. 
+
+## Agreement data base ----
+  data_agreement <- data_kappa %>% dplyr::filter(agree == "agree")
+  write_excel_csv(data_agreement, here("Data", "DF_articulo_agreement.csv"))
   
 # Kappa Statistic ---------------------------------------------------------
 ####
